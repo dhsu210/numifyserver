@@ -27,13 +27,25 @@ app.get('/', function (req, res) {
   res.send('Numify API');
 });
 
+app.get('/db', function (request, response) {
+  pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+    client.query('SELECT * FROM test_table', function(err, result) {
+      done();
+      if (err)
+       { console.error(err); response.send("Error " + err); }
+      else
+       { response.send(result.rows); }
+    });
+  });
+})
+
 // ************************************************************
 // ******************* DATA LAYER *****************************
 // ************************************************************
 
 // Save user rating numbers and dictations
-app.post('/users/:id', function(req, res) {
-  db.query("INSERT INTO users (name, dictation, rating, created) VALUES ($1, $2, $3, NOW())", [req.params.name, req.body.dictation, req.body.rating], function(err, result) {
+app.post('/users', function(req, res) {
+  db.query("INSERT INTO users (name, dictation, rating, created) VALUES ($1, $2, $3, NOW())", [req.body.name, req.body.dictation, req.body.rating], function(err, result) {
     if (err) {
       	res.status(500).send(err);
     } else {
@@ -41,6 +53,18 @@ app.post('/users/:id', function(req, res) {
       	res.send(result);
     }
   });
+});
+
+// Get all users out of database
+app.get('/users', function (req, res) {
+  console.log(db);
+  db.query("SELECT * FROM users", function(err, result) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.send(result.rows);
+    }
+  })
 });
 
 // Get users out of database
