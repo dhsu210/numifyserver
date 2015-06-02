@@ -36,6 +36,7 @@ app.get('/', function (req, res) {
 app.post('/users', function(req, res) {
   db.query("INSERT INTO users (name, dictation, rating, created) VALUES ($1, $2, $3, NOW())", [req.body.name, req.body.dictation, req.body.rating], function(err, result) {
     if (err) {
+    	console.log(err);
       	res.status(500).send(err);
     } else {
     	console.log(result)
@@ -49,21 +50,25 @@ app.get('/users', function (req, res) {
   console.log(db);
   db.query("SELECT * FROM users", function(err, result) {
     if (err) {
-      res.status(500).send(err);
+    	console.log(err);
+      	res.status(500).send(err);
     } else {
-      res.send(result.rows);
+    	console.log(result.rows);
+      	res.send(result.rows);
     }
   })
 });
 
-// Get users out of database
+// Get a user out of database
 app.get('/users/:id', function (req, res) {
   console.log(db);
-  db.query("SELECT name FROM users ORDER BY created", [req.body.name], function(err, result) {
+  db.query("SELECT id FROM users ORDER BY created", [req.params.name], function(err, result) {
     if (err) {
-      res.status(500).send(err);
+    	console.log(err);
+      	res.status(500).send(err);
     } else {
-      res.send(result.rows);
+    	console.log(result.rows);
+      	res.send(result.rows);
     }
   })
 });
