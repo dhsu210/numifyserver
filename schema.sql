@@ -3,9 +3,16 @@ CREATE DATABASE numifyserver;
 \c numifyserver;
 
 CREATE TABLE users (
-  id SERIAL NOT NULL,
-  name varchar(100) NOT NULL,
-  dictation text NOT NULL,
-  rating INT NOT NULL,
-  created timestamp DEFAULT localtimestamp NOT NULL
+	id SERIAL PRIMARY KEY NOT NULL,
+	name varchar(100) NOT NULL,
+	created timestamp DEFAULT localtimestamp NOT NULL
+);
+
+CREATE TABLE dictations (
+	id SERIAL NOT NULL,
+	message text NOT NULL,
+	rating INT NOT NULL,
+	user_id INT NOT NULL,
+	FOREIGN KEY (user_id) REFERENCES users(id),
+	created timestamp DEFAULT localtimestamp NOT NULL
 );

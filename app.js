@@ -3,6 +3,8 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+
+console.log("test test")
 // ******************************
 // ****** INITIALIZATION ********
 // ******************************
@@ -12,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Connects to postgres once, on server start
-var conString = process.env.DATABASE_URL || "postgres://localhost/action";
+var conString = process.env["DATABASE_URL"] || "postgres://localhost:5432/numifyserver";
 var db;
 pg.connect(conString, function(err, client) {
 	if (err) {
@@ -32,23 +34,10 @@ app.get('/', function (req, res) {
 // ******************* DATA LAYER *****************************
 // ************************************************************
 
-// Save user rating numbers and dictations
-app.post('/users', function(req, res) {
-  db.query("INSERT INTO users (name, dictation, rating, created) VALUES ($1, $2, $3, NOW())", [req.body.name, req.body.dictation, req.body.rating], function(err, result) {
-    if (err) {
-    	console.log(err);
-      	res.status(500).send(err);
-    } else {
-    	console.log(result)
-      	res.send(result);
-    }
-  });
-});
-
 // Get all users out of database
 app.get('/users', function (req, res) {
   console.log(db);
-  db.query("SELECT * FROM users", function(err, result) {
+  db.query("SELECT id, name, created FROM users", function(err, result) {
     if (err) {
     	console.log(err);
       	res.status(500).send(err);
@@ -59,10 +48,10 @@ app.get('/users', function (req, res) {
   })
 });
 
-// Get a user out of database
-app.get('/users/:id', function (req, res) {
+// Get the last four dictations/number ratings that were entered into the database
+app.get('/users/lastfour', function (req, res) {
   console.log(db);
-  db.query("SELECT id FROM users ORDER BY created", [req.params.name], function(err, result) {
+  db.query("SELECT users.name, dictations.message, dictations.rating FROM users JOIN dictations ON users.id = dictations.user_id ORDER BY created LIMIT 4", [req.params.name], function(err, result) {
     if (err) {
     	console.log(err);
       	res.status(500).send(err);
@@ -71,6 +60,38 @@ app.get('/users/:id', function (req, res) {
       	res.send(result.rows);
     }
   })
+});
+
+// Get a particular user's rating
+
+// Save a user's rating number and dictation into database
+app.post('/users/:id', function(req, res) {
+	console.log("this is the request.body")
+	console.log(req.body)
+	db.query("INSERT INTO dictations (message, rating, user_id, created) VALUES ($1, $2, $3, NOW())", [req.body.message, req.body.rating, req.params.id], function(err, result) {
+	if (err) {
+		console.log(err);
+	  	res.status(500).send(err);
+	} else {
+		console.log(result)
+	  	res.send(result);
+	}
+	});
+});
+
+// Save a user into database
+app.post('/users', function(req, res) {
+	console.log("this is the request.body")
+	console.log(req.body)
+	db.query("INSERT INTO users (name, created) VALUES ($1, NOW())", [req.body.name], function(err, result) {
+	if (err) {
+		console.log(err);
+	  	res.status(500).send(err);
+	} else {
+		console.log(result)
+	  	res.send(result);
+	}
+	});
 });
 
 //
