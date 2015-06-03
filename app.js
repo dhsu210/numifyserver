@@ -3,8 +3,6 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
-
-console.log("test test")
 // ******************************
 // ****** INITIALIZATION ********
 // ******************************
@@ -64,7 +62,7 @@ app.get('/users/lastfour', function (req, res) {
 
 // Get a particular user's ratings and dictations
 app.get('/users/:id', function (req, res) {
-		db.query("SELECT users.name, dictations.message, dictations.rating FROM dictations, users WHERE users.id = dictations.user_id ORDER BY message_created", function(err, result) {
+		db.query("SELECT users.name, dictations.message, dictations.rating FROM dictations JOIN users ON users.id = dictations.user_id WHERE dictations.user_id = $1 ORDER BY message_created", [req.params.id], function(err, result) {
 			if (err) {
 				console.log(err);
 			  	res.status(500).send(err);
