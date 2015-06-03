@@ -5,7 +5,7 @@ CREATE DATABASE numifyserver;
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY NOT NULL,
 	name varchar(100) NOT NULL,
-	created timestamp DEFAULT localtimestamp NOT NULL
+	user_created timestamp DEFAULT localtimestamp NOT NULL
 );
 
 CREATE TABLE dictations (
@@ -14,5 +14,5 @@ CREATE TABLE dictations (
 	rating INT NOT NULL,
 	user_id INT NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users(id),
-	created timestamp DEFAULT localtimestamp NOT NULL
+	message_created timestamp DEFAULT localtimestamp NOT NULL
 );
