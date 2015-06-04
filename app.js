@@ -35,7 +35,7 @@ app.get('/', function (req, res) {
 // Get all users out of database
 app.get('/users', function (req, res) {
   console.log(db);
-  db.query("SELECT id, name, user_created FROM users", function(err, result) {
+  db.query("SELECT id, name, email, user_created FROM users", function(err, result) {
     if (err) {
     	console.log(err);
       	res.status(500).send(err);
@@ -92,7 +92,7 @@ app.post('/users/:id', function(req, res) {
 app.post('/users', function(req, res) {
 	console.log("this is the request.body")
 	console.log(req.body)
-	db.query("INSERT INTO users (name, user_created) VALUES ($1, NOW())", [req.body.name], function(err, result) {
+	db.query("INSERT INTO users (name, email, user_created) VALUES ($1, $2, NOW())", [req.body.name, req.body.email], function(err, result) {
 	if (err) {
 		console.log(err);
 	  	res.status(500).send(err);

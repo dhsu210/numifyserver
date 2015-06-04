@@ -1,10 +1,11 @@
-CREATE DATABASE numifyserver;
+-- CREATE DATABASE numifyserver;
 
-\c numifyserver;
+-- \c numifyserver;
 
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY NOT NULL,
 	name varchar(100) NOT NULL,
+	email varchar(255),
 	user_created timestamp DEFAULT localtimestamp NOT NULL
 );
 
