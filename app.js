@@ -98,7 +98,7 @@ app.post('/users', function(req, res) {
 	  	res.status(500).send(err);
 	} else {
 		console.log(result)
-	  	res.send(result)
+	  	res.send(result.rows[0])
 	}
 	});
 });
