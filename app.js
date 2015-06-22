@@ -88,11 +88,23 @@ app.post('/users/:id', function(req, res) {
 	});
 });
 
+function userInDataBase(name, email) {
+	if (db.query("SELECT name, email FROM users") {
+		return true
+	} else {
+		return false
+	}
+}
+
 // Save a user into database
 app.post('/users', function(req, res) {
 	console.log("this is the request.body")
 	console.log(req.body)
-	db.query("INSERT INTO users (name, email, user_created) VALUES ($1, $2, NOW()) RETURNING id, name, email", [req.body.name, req.body.email], function(err, result) {
+	if userInDataBase(req.body.name, req.body.email) {
+		console.log(result)
+	} else {
+		db.query("INSERT INTO users (name, email, user_created) VALUES ($1, $2, NOW()) RETURNING id, name, email", [req.body.name, req.body.email], function(err, result) {
+	}
 	if (err) {
 		console.log(err);
 	  	res.status(500).send(err);
