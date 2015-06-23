@@ -90,9 +90,9 @@ app.post('/users/:id', function(req, res) {
 
 function userInDataBase(name, email) {
 	if (db.query("SELECT name, email FROM users") {
-		return true
+		return true;
 	} else {
-		return false
+		return false;
 	}
 }
 
@@ -101,18 +101,26 @@ app.post('/users', function(req, res) {
 	console.log("this is the request.body")
 	console.log(req.body)
 	if userInDataBase(req.body.name, req.body.email) {
-		console.log("User is in database")
+		db.query("SELECT id, name, email FROM users", function(err, result) {
+			if (err) {
+				console.log(err);
+	  			res.status(500).send(err);
+			} else {
+				console.log(result);
+	  			res.send(result.rows[0]);
+			}
+		});
 	} else {
 		db.query("INSERT INTO users (name, email, user_created) VALUES ($1, $2, NOW()) RETURNING id, name, email", [req.body.name, req.body.email], function(err, result) {
+			if (err) {
+				console.log(err);
+	  			res.status(500).send(err);
+			} else {
+				console.log(result);
+	  			res.send(result.rows[0]);
+			}
+		});
 	}
-	if (err) {
-		console.log(err);
-	  	res.status(500).send(err);
-	} else {
-		console.log(result)
-	  	res.send(result.rows[0])
-	}
-	});
 });
 
 //Start the actual server
