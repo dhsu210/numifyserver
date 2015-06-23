@@ -101,7 +101,7 @@ app.post('/users', function(req, res) {
 	console.log("this is the request.body")
 	console.log(req.body)
 	if userInDataBase(req.body.name, req.body.email) {
-		console.log(result)
+		console.log("User is in database")
 	} else {
 		db.query("INSERT INTO users (name, email, user_created) VALUES ($1, $2, NOW()) RETURNING id, name, email", [req.body.name, req.body.email], function(err, result) {
 	}
