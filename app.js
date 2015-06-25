@@ -92,14 +92,14 @@ app.post('/users/:id', function(req, res) {
 app.post('/users', function(req, res) {
    console.log("this is the request.body")
    console.log(req.body)
-   db.query("SELECT id, name, email, user_FB_id FROM users WHERE name = $1 and email = $2 and user_FB_id = $3", [req.body.name, req.body.email, req.body.user_FB_id], function(err, result) {
+   db.query("SELECT id, name, email, user_fb_id FROM users WHERE name = $1 and email = $2 and user_fb_id = $3", [req.body.name, req.body.email, req.body.user_fb_id], function(err, result) {
        if (err) console.log(err); 
        if (result.rows.length > 0) {
            console.log("user exists");
            console.log(result.rows[0]);
            res.send(result.rows[0]);
        } else {
-           db.query("INSERT INTO users (name, email, user_FB_id, user_created) VALUES ($1, $2, $3, NOW()) RETURNING id, name, email, user_FB_id", [req.body.name, req.body.email, req.body.user_FB_id], function(err, result) {
+           db.query("INSERT INTO users (name, email, user_fb_id, user_created) VALUES ($1, $2, $3, NOW()) RETURNING id, name, email, user_fb_id", [req.body.name, req.body.email, req.body.user_fb_id], function(err, result) {
                if (err) {
                    console.log("this is not inserting")
                    console.log(err);

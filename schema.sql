@@ -6,7 +6,7 @@ CREATE TABLE users (
 	id SERIAL PRIMARY KEY NOT NULL,
 	name varchar(100) NOT NULL,
 	email varchar(255),
-	user_FB_id varchar(255) NOT NULL,
+	user_fb_id varchar(255) NOT NULL,
 	user_created timestamp DEFAULT localtimestamp NOT NULL
 );
 
