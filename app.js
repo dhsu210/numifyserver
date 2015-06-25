@@ -49,7 +49,7 @@ app.get('/users', function (req, res) {
 // Get the last four dictations/number ratings that were entered into the database
 app.get('/users/lastfour', function (req, res) {
   console.log(db);
-  db.query("SELECT users.name, dictations.message, dictations.rating FROM users JOIN dictations ON users.id = dictations.user_id ORDER BY message_created DESC LIMIT 4 OFFSET 1", function(err, result) {
+  db.query("SELECT users.name, dictations.message, dictations.rating, users.user_FB_id FROM users JOIN dictations ON users.id = dictations.user_id ORDER BY message_created DESC LIMIT 4 OFFSET 1", function(err, result) {
 		if (err) {
 			console.log(err);
 			res.status(500).send(err);
